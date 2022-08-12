@@ -21,6 +21,7 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+
 }
 
 dependencies {
@@ -81,4 +82,12 @@ test {
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
 }
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:all" << "-Xlint:-processing" << "-Werror"
+}
+
 

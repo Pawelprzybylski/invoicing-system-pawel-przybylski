@@ -6,14 +6,14 @@ import pl.futurecollars.invoicing.model.Invoice;
 
 public interface Database {
 
-  long save(Invoice invoice);
+  int save(Invoice invoice);
 
-  Optional<Invoice> getById(long id);
+  Optional<Invoice> getById(int id);
 
   List<Invoice> getAll();
 
-  void update(long id, Invoice updatedInvoice);
+  void update(int id, Invoice updatedInvoice);
 
-  void delete(long id);
+  void delete(int id);
 
 }
