@@ -40,7 +40,6 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
-
 }
 
 application {
@@ -82,6 +81,7 @@ test {
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
 }
+
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
 }
@@ -89,5 +89,6 @@ jacocoTestReport {
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:all" << "-Xlint:-processing" << "-Werror"
 }
+
 
 
