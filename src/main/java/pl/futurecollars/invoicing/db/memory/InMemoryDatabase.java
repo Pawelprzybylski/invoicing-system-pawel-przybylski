@@ -45,5 +45,4 @@ public class InMemoryDatabase implements Database {
   public void delete(int id) {
     invoices.remove(id);
   }
-
 }
