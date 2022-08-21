@@ -10,6 +10,5 @@ class AppTest extends Specification {
 
         and:
         app.main()
-
     }
 }
