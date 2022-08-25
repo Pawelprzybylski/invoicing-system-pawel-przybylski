@@ -57,20 +57,31 @@ public class FileBasedDatabase implements Database {
   }
 
   @Override
-  public void update(int id, Invoice updatedInvoice) {
+  public void update(int id, Invoice data) {
     try {
       List<String> allInvoices = filesService.readAllLines(databasePath);
+      String invoiceAsJson = allInvoices
+          .stream()
+          .filter(line -> containsId(line, id))
+          .findFirst()
+          .orElseThrow(() -> new RuntimeException("Invoice with id=" + id + " couldn't be found."));
 
-      var oldInvoice = allInvoices.get(id);
-      allInvoices.remove(oldInvoice);
-      updatedInvoice.setId(id);
-      allInvoices.add(jsonService.toJson(updatedInvoice));
-
+      allInvoices.remove(invoiceAsJson);
+      Invoice invoice = jsonService.toObject(invoiceAsJson, Invoice.class);
+      getDataInfo(invoice, data);
+      allInvoices.add(jsonService.toJson(invoice));
       filesService.writeLinesToFile(databasePath, allInvoices);
-
     } catch (IOException ex) {
       throw new RuntimeException("Failed to update invoice with id: " + id, ex);
     }
+  }
+
+  public void getDataInfo(Invoice invoice, Invoice data) {
+
+    invoice.setDate(data.getDate());
+    invoice.setBuyer(data.getBuyer());
+    invoice.setSeller(data.getSeller());
+    invoice.setEntries(data.getEntries());
   }
 
   @Override
