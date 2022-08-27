@@ -76,7 +76,7 @@ public class FileBasedDatabase implements Database {
     }
   }
 
-  public void updateInvoiceData(Invoice invoice, Invoice data) {
+  private void updateInvoiceData(Invoice invoice, Invoice data) {
     invoice.setDate(data.getDate());
     invoice.setBuyer(data.getBuyer());
     invoice.setSeller(data.getSeller());
