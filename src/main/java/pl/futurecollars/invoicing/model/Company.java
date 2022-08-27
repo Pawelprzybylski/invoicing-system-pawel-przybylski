@@ -12,6 +12,7 @@ public class Company {
   private String name;
 
   public Company(String taxIdentificationNumber, String address, String name) {
+
     this.taxIdentificationNumber = taxIdentificationNumber;
     this.address = address;
     this.name = name;
