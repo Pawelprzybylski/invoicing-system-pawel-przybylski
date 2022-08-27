@@ -68,7 +68,7 @@ public class FileBasedDatabase implements Database {
 
       allInvoices.remove(invoiceAsJson);
       Invoice invoice = jsonService.toObject(invoiceAsJson, Invoice.class);
-      getDataInfo(invoice, data);
+      updateInvoiceData(invoice, data);
       allInvoices.add(jsonService.toJson(invoice));
       filesService.writeLinesToFile(databasePath, allInvoices);
     } catch (IOException ex) {
@@ -76,8 +76,7 @@ public class FileBasedDatabase implements Database {
     }
   }
 
-  public void getDataInfo(Invoice invoice, Invoice data) {
-
+  public void updateInvoiceData(Invoice invoice, Invoice data) {
     invoice.setDate(data.getDate());
     invoice.setBuyer(data.getBuyer());
     invoice.setSeller(data.getSeller());
