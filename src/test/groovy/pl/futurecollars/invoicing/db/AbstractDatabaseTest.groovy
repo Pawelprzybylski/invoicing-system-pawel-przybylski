@@ -73,16 +73,11 @@ abstract class AbstractDatabaseTest extends Specification {
         int id = database.save(originalInvoice)
 
         when:
-        def result = database.update(id, invoices.get(1))
+        def result = database.update(id, invoices.get(0))
 
         then:
-        database.getById(id).get() == invoices.get(1)
+        database.getById(id).get() == invoices.get(0)
         result == Optional.of(originalInvoice)
-    }
-
-    def "updating not existing invoice returns Optional.empty()"() {
-        expect:
-        database.update(213, invoices.get(1)) == Optional.empty()
     }
 
 }

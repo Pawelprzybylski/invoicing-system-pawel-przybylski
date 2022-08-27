@@ -57,26 +57,33 @@ public class FileBasedDatabase implements Database {
   }
 
   @Override
-  public Optional<Invoice> update(int id, Invoice updatedInvoice) {
+  public Optional<Invoice> update(int id, Invoice data) {
     try {
       List<String> allInvoices = filesService.readAllLines(databasePath);
-      var invoicesWithoutInvoiceWithGivenId = allInvoices
+      String invoiceAsJson = allInvoices
           .stream()
-          .filter(line -> !containsId(line, id))
-          .collect(Collectors.toList());
+          .filter(line -> containsId(line, id))
+          .findFirst()
+          .orElseThrow(() -> new RuntimeException("Invoice with id=" + id + " couldn't be found."));
 
-      updatedInvoice.setId(id);
-      invoicesWithoutInvoiceWithGivenId.add(jsonService.toJson(updatedInvoice));
-
-      filesService.writeLinesToFile(databasePath, invoicesWithoutInvoiceWithGivenId);
-
-      allInvoices.removeAll(invoicesWithoutInvoiceWithGivenId);
+      allInvoices.remove(invoiceAsJson);
+      Invoice invoice = jsonService.toObject(invoiceAsJson, Invoice.class);
+      updateInvoiceData(invoice, data);
+      allInvoices.add(jsonService.toJson(invoice));
+      filesService.writeLinesToFile(databasePath, allInvoices);
       return allInvoices.isEmpty() ? Optional.empty() : Optional.of(jsonService.toObject(allInvoices.get(0), Invoice.class));
 
     } catch (IOException ex) {
       throw new RuntimeException("Failed to update invoice with id: " + id, ex);
     }
 
+  }
+
+  private void updateInvoiceData(Invoice invoice, Invoice data) {
+    invoice.setDate(data.getDate());
+    invoice.setBuyer(data.getBuyer());
+    invoice.setSeller(data.getSeller());
+    invoice.setEntries(data.getEntries());
   }
 
   @Override

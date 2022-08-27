@@ -32,10 +32,10 @@ public class InMemoryDatabase implements Database {
   }
 
   @Override
-  public Optional<Invoice> update(int id, Invoice updatedInvoice) {
-    updatedInvoice.setId(id);
+  public Optional<Invoice> update(int id, Invoice data) {
+    data.setId(id);
 
-    return Optional.ofNullable(invoices.put(id, updatedInvoice));
+    return Optional.ofNullable(invoices.put(id, data));
   }
 
   @Override
