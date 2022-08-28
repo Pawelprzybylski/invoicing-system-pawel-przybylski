@@ -6,7 +6,6 @@ import pl.futurecollars.invoicing.helpers.TestHelpers
 import pl.futurecollars.invoicing.utils.FilesService
 import pl.futurecollars.invoicing.utils.JsonService
 
-import java.nio.charset.Charset
 import java.nio.file.Files
 
 class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
@@ -18,10 +17,10 @@ class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
         def filesService = new FilesService()
 
         def idPath = File.createTempFile('ids', '.txt').toPath()
-        def idService = new IdProvider(idPath, filesService)
+        def idProvider = new IdProvider(idPath, filesService)
 
         dbPath = File.createTempFile('invoices', '.txt').toPath()
-        return new FileBasedDatabase(dbPath, idService, filesService, new JsonService())
+        return new FileBasedDatabase(dbPath, idProvider, filesService, new JsonService())
     }
 
     def "file based database writes invoices to correct file"() {
@@ -32,12 +31,12 @@ class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
         db.save(TestHelpers.invoice(4))
 
         then:
-        1 == Files.readAllLines(dbPath, Charset.defaultCharset()).size()
+        1 == Files.readAllLines(dbPath).size()
 
         when:
         db.save(TestHelpers.invoice(5))
 
         then:
-        2 == Files.readAllLines(dbPath, Charset.defaultCharset()).size()
+        2 == Files.readAllLines(dbPath).size()
     }
 }

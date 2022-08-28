@@ -57,7 +57,7 @@ public class FileBasedDatabase implements Database {
   }
 
   @Override
-  public void update(int id, Invoice data) {
+  public Optional<Invoice> update(int id, Invoice data) {
     try {
       List<String> allInvoices = filesService.readAllLines(databasePath);
       String invoiceAsJson = allInvoices
@@ -71,9 +71,12 @@ public class FileBasedDatabase implements Database {
       updateInvoiceData(invoice, data);
       allInvoices.add(jsonService.toJson(invoice));
       filesService.writeLinesToFile(databasePath, allInvoices);
+      return allInvoices.isEmpty() ? Optional.empty() : Optional.of(jsonService.toObject(allInvoices.get(0), Invoice.class));
+
     } catch (IOException ex) {
       throw new RuntimeException("Failed to update invoice with id: " + id, ex);
     }
+
   }
 
   private void updateInvoiceData(Invoice invoice, Invoice data) {
@@ -84,14 +87,20 @@ public class FileBasedDatabase implements Database {
   }
 
   @Override
-  public void delete(int id) {
+  public Optional<Invoice> delete(int id) {
     try {
-      var updatedList = filesService.readAllLines(databasePath)
+      var allInvoices = filesService.readAllLines(databasePath);
+
+      var invoicesExceptDeleted = allInvoices
           .stream()
           .filter(line -> !containsId(line, id))
           .collect(Collectors.toList());
 
-      filesService.writeLinesToFile(databasePath, updatedList);
+      filesService.writeLinesToFile(databasePath, invoicesExceptDeleted);
+
+      allInvoices.removeAll(invoicesExceptDeleted);
+
+      return allInvoices.isEmpty() ? Optional.empty() : Optional.of(jsonService.toObject(allInvoices.get(0), Invoice.class));
 
     } catch (IOException ex) {
       throw new RuntimeException("Failed to delete invoice with id: " + id, ex);
