@@ -100,7 +100,7 @@ public class FileBasedDatabase implements Database {
 
       allInvoices.removeAll(invoicesExceptDeleted);
 
-      return Optional.of(jsonService.toObject(allInvoices.get(id), Invoice.class));
+      return Optional.of(jsonService.toObject(allInvoices.get(id - 1), Invoice.class));
 
     } catch (IOException ex) {
       throw new RuntimeException("Failed to delete invoice with id: " + id, ex);
