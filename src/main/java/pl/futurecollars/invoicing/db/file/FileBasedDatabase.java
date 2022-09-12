@@ -71,6 +71,7 @@ public class FileBasedDatabase implements Database {
       updateInvoiceData(invoice, data);
       allInvoices.add(jsonService.toJson(invoice));
       filesService.writeLinesToFile(databasePath, allInvoices);
+
       return Optional.of(invoice);
 
     } catch (IOException ex) {
