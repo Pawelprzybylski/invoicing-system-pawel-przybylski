@@ -71,7 +71,7 @@ public class FileBasedDatabase implements Database {
       updateInvoiceData(invoice, data);
       allInvoices.add(jsonService.toJson(invoice));
       filesService.writeLinesToFile(databasePath, allInvoices);
-      return allInvoices.isEmpty() ? Optional.empty() : Optional.of(data);
+      return Optional.of(invoice);
 
     } catch (IOException ex) {
       throw new RuntimeException("Failed to update invoice with id: " + id, ex);
@@ -100,7 +100,7 @@ public class FileBasedDatabase implements Database {
 
       allInvoices.removeAll(invoicesExceptDeleted);
 
-      return allInvoices.isEmpty() ? Optional.empty() : Optional.of(jsonService.toObject(allInvoices.toString(), Invoice.class));
+      return Optional.of(jsonService.toObject(allInvoices.get(id), Invoice.class));
 
     } catch (IOException ex) {
       throw new RuntimeException("Failed to delete invoice with id: " + id, ex);
