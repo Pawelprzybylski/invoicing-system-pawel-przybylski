@@ -57,23 +57,30 @@ public class FileBasedDatabase implements Database {
   }
 
   @Override
-  public void update(int id, Invoice data) {
+  public Optional<Invoice> update(int id, Invoice data) {
     try {
       List<String> allInvoices = filesService.readAllLines(databasePath);
-      String invoiceAsJson = allInvoices
+
+      Optional<String> invoiceAsJson = allInvoices
           .stream()
           .filter(line -> containsId(line, id))
-          .findFirst()
-          .orElseThrow(() -> new RuntimeException("Invoice with id=" + id + " couldn't be found."));
+          .findFirst();
 
-      allInvoices.remove(invoiceAsJson);
-      Invoice invoice = jsonService.toObject(invoiceAsJson, Invoice.class);
-      updateInvoiceData(invoice, data);
-      allInvoices.add(jsonService.toJson(invoice));
-      filesService.writeLinesToFile(databasePath, allInvoices);
+      if (invoiceAsJson.isPresent()) {
+        allInvoices.remove(invoiceAsJson.get());
+        Invoice invoice = jsonService.toObject(invoiceAsJson.get(), Invoice.class);
+        updateInvoiceData(invoice, data);
+        allInvoices.add(jsonService.toJson(invoice));
+        filesService.writeLinesToFile(databasePath, allInvoices);
+        return Optional.of(invoice);
+      } else {
+        return Optional.empty();
+      }
+
     } catch (IOException ex) {
       throw new RuntimeException("Failed to update invoice with id: " + id, ex);
     }
+
   }
 
   private void updateInvoiceData(Invoice invoice, Invoice data) {
@@ -84,15 +91,22 @@ public class FileBasedDatabase implements Database {
   }
 
   @Override
-  public void delete(int id) {
+  public Optional<Invoice> delete(int id) {
     try {
-      var updatedList = filesService.readAllLines(databasePath)
+      var allInvoices = filesService.readAllLines(databasePath);
+
+      Optional<String> invoiceAsJson = allInvoices
           .stream()
-          .filter(line -> !containsId(line, id))
-          .collect(Collectors.toList());
+          .filter(line -> containsId(line, id))
+          .findFirst();
 
-      filesService.writeLinesToFile(databasePath, updatedList);
-
+      if (invoiceAsJson.isPresent()) {
+        allInvoices.remove(invoiceAsJson.get());
+        filesService.writeLinesToFile(databasePath, allInvoices);
+        return Optional.of(jsonService.toObject(invoiceAsJson.get(), Invoice.class));
+      } else {
+        return Optional.empty();
+      }
     } catch (IOException ex) {
       throw new RuntimeException("Failed to delete invoice with id: " + id, ex);
     }

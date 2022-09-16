@@ -56,27 +56,28 @@ abstract class AbstractDatabaseTest extends Specification {
         invoices.forEach({ database.save(it) })
 
         when:
-        invoices.forEach({ database.delete(it.getId()) })
+        invoices.forEach({ database.delete(it.getId())})
 
         then:
         database.getAll().isEmpty()
     }
 
-    def "deleting not existing invoice is not causing any error"() {
+    def "deleting not existing invoice returns optional empty"() {
         expect:
-        database.delete(123);
+        database.delete(123) == Optional.empty()
     }
 
-    def "it's possible to update the invoice"() {
+    def "it's possible to update the invoice, original invoice is returned"() {
         given:
-        int id= database.save(invoices.get(0))
-        database.save(invoices.get(1))
+        def originalInvoice = invoices.get(0)
+        int id = database.save(originalInvoice)
 
         when:
-        database.update(id, invoices.get(0))
+        def result = database.update(id, invoices.get(0))
 
         then:
         database.getById(id).get() == invoices.get(0)
+        result == Optional.of(originalInvoice)
     }
 
 }
