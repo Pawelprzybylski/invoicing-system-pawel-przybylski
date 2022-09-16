@@ -56,7 +56,7 @@ abstract class AbstractDatabaseTest extends Specification {
         invoices.forEach({ database.save(it) })
 
         when:
-        invoices.forEach({ database.delete(it.getId()) })
+        invoices.forEach({ database.delete(it.getId())})
 
         then:
         database.getAll().isEmpty()
