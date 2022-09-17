@@ -80,6 +80,7 @@ public class FileBasedDatabase implements Database {
     } catch (IOException ex) {
       throw new RuntimeException("Failed to update invoice with id: " + id, ex);
     }
+
   }
 
   private void updateInvoiceData(Invoice invoice, Invoice data) {
@@ -106,7 +107,6 @@ public class FileBasedDatabase implements Database {
       } else {
         return Optional.empty();
       }
-
     } catch (IOException ex) {
       throw new RuntimeException("Failed to delete invoice with id: " + id, ex);
     }
