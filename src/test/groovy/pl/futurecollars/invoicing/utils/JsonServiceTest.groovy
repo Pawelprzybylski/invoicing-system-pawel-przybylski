@@ -1,5 +1,6 @@
 package pl.futurecollars.invoicing.utils
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import pl.futurecollars.invoicing.helpers.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
@@ -21,4 +22,19 @@ class JsonServiceTest extends Specification {
         invoice == invoiceFromJson
     }
 
+    def "return exception when parsing wrong json string"() {
+        given:
+        def jsonService = new JsonService()
+        ObjectMapper objectMapper = new ObjectMapper()
+        def invoice3 = TestHelpers.invoice(3)
+        def jsonString = objectMapper.writeValueAsString(invoice3)
+        jsonString = jsonString.replace('[', 'z')
+
+        when:
+        jsonService.toObject(jsonString, Invoice)
+
+        then:
+        RuntimeException exception = thrown(RuntimeException)
+        exception.message == "Failed to parse JSON"
+    }
 }
