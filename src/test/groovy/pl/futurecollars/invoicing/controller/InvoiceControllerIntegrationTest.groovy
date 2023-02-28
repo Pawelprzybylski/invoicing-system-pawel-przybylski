@@ -197,4 +197,6 @@ class InvoiceControllerIntegrationTest extends Specification {
     private String invoiceAsJson(int id) {
         jsonService.toJson(invoice(id))
     }
+
+}
 }
