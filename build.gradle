@@ -1,68 +1,64 @@
 buildscript {
     ext {
-        lombokVersion = '1.18.16'
-        // 1.18.18 is broken - lombok.config is ignored, try to upgrade to 1.18.20 when available
+        lombokVersion = '1.18.18'
+        spockVersion = '1.3-groovy-2.5'
+        springBootVersion = '2.4.2'
+        springDependencyManagementVersion = '1.0.11.RELEASE'
+        springFoxStarterVersion = '3.0.0'
+        springFoxUiVersion = '3.0.0'
     }
 }
 
 plugins {
-    id 'org.springframework.boot' version '2.4.2'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-
-    // Apply the java plugin to add support for Java
-    id 'java'
-
-    // Apply the application plugin to add support for building a CLI application.
-    id 'application'
-
-    // Apply the groovy plugin to also add support for Groovy (needed for Spock)
     id 'groovy'
-
     id 'checkstyle'
-
     id 'jacoco'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'java'
+}
+
+group = 'pl.futurecollars'
+version = '0.0.1-SNAPSHOT'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.1'
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-    // This dependency is used by the application.
-    implementation 'com.google.guava:guava:29.0-jre'
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
 
-    // Use the latest Groovy version for Spock testing
-    testImplementation 'org.codehaus.groovy:groovy-all:2.5.11'
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "io.springfox:springfox-boot-starter:${springFoxStarterVersion}"
+    implementation "io.springfox:springfox-swagger-ui:${springFoxUiVersion}"
 
-    // Use the awesome Spock testing and specification framework even with Java
-    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
-    testImplementation 'org.spockframework:spock-spring:1.3-groovy-2.5'
-    testImplementation 'junit:junit:4.13'
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-    //Lombok
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
-    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.spockframework:spock-core:${spockVersion}"
+    testImplementation "org.spockframework:spock-spring:${spockVersion}"
 }
 
-application {
-    // Define the main class for the application.
-    mainClassName = 'pl.futurecollars.invoicing.App'
-}
 
-jacoco {
-    toolVersion = "0.8.6"
+checkstyle {
+    showViolations = true
+    ignoreFailures = false
+    maxWarnings = 0
+    maxErrors = 0
 }
 
 jacocoTestCoverageVerification {
+
     violationRules {
         rule {
             limit {
@@ -77,35 +73,16 @@ jacocoTestCoverageVerification {
             }
         }
     }
+}
 
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: 'pl/futurecollars/invoicing/InvoiceApplication.class')
-        }))
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(14)
+        vendor = JvmVendorSpec.ADOPTOPENJDK
     }
 }
 
 test {
     finalizedBy jacocoTestReport
-}
-
-check {
     finalizedBy jacocoTestCoverageVerification
-}
-
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-}
-
-tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:all" << "-Xlint:-processing" << "-Werror"
-}
-
-sourceCompatibility = 1.14
-
-checkstyle {
-    showViolations = true
-    ignoreFailures = false
-    maxWarnings = 0
-    maxErrors = 0
 }

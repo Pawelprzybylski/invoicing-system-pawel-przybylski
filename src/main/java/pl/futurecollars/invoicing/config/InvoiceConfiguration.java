@@ -3,6 +3,7 @@ package pl.futurecollars.invoicing.config;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import pl.futurecollars.invoicing.service.InvoiceService;
 import pl.futurecollars.invoicing.utils.FilesService;
 import pl.futurecollars.invoicing.utils.JsonService;
 
+@Slf4j
 @Configuration
 public class InvoiceConfiguration {
 
@@ -27,7 +29,7 @@ public class InvoiceConfiguration {
   }
 
   @Bean
-  public FilesService fileService() {
+  public FilesService filesService() {
     return new FilesService();
   }
 
@@ -42,7 +44,7 @@ public class InvoiceConfiguration {
   }
 
   @Bean
-  public IdProvider idProvider(FilesService filesService) throws IOException {
+  public IdProvider idService(FilesService filesService) throws IOException {
     Path idFilePath = Files.createTempFile(DATABASE_LOCATION, ID_FILE_NAME);
     return new IdProvider(idFilePath, filesService);
   }
@@ -52,4 +54,5 @@ public class InvoiceConfiguration {
     Path databaseFilePath = Files.createTempFile(DATABASE_LOCATION, INVOICES_FILE_NAME);
     return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService);
   }
+
 }
