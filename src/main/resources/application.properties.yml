@@ -1,2 +1,0 @@
-database.type=file
-database.path=/db/invoices.json
