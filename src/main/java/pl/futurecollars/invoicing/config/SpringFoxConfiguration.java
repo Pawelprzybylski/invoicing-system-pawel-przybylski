@@ -11,7 +11,6 @@ import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
-
 @Configuration
 public class SpringFoxConfiguration {
 
@@ -36,7 +35,7 @@ public class SpringFoxConfiguration {
         .contact(
             new Contact(
                 "Paweł Przybylski & Mateusz Pyza ",
-                "https://github.com/Pawelprzybylski, https://github.com/mateuszpyza" ,
+                "https://github.com/Pawelprzybylski, https://github.com/mateuszpyza",
                 "pawel.przybylski1989@gmail.com, mateuszpyza1@wp.pl")
         )
         .build();
