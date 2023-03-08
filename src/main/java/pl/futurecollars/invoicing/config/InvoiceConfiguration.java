@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.futurecollars.invoicing.db.Database;
@@ -35,6 +36,7 @@ public class InvoiceConfiguration {
   }
 
   @Bean
+  @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
   public InMemoryDatabase inMemoryDatabase() {
     return new InMemoryDatabase();
   }
@@ -51,6 +53,7 @@ public class InvoiceConfiguration {
   }
 
   @Bean
+  @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
   public Database fileBasedDatabase(IdProvider idService, FilesService filesService, JsonService jsonService) throws IOException {
     Path databaseFilePath = Files.createTempFile(DATABASE_LOCATION, INVOICES_FILE_NAME);
     return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService);
