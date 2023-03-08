@@ -1,7 +1,5 @@
-server.port=9999
+server:
+  port: 6666
 
-database.type=file
-database.path=/db/invoices.json
-
-logging.level.pl.futurecollars.invoicing=INFO
-logging.level.pl.futurecollars.invoicing.db.file=DEBUG
+invoicing-system:
+  database: file

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +12,6 @@ import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.db.file.FileBasedDatabase;
 import pl.futurecollars.invoicing.db.file.IdProvider;
 import pl.futurecollars.invoicing.db.memory.InMemoryDatabase;
-import pl.futurecollars.invoicing.service.InvoiceService;
-import pl.futurecollars.invoicing.service.TaxCalculatorService;
 import pl.futurecollars.invoicing.utils.FilesService;
 import pl.futurecollars.invoicing.utils.JsonService;
 
@@ -26,27 +24,14 @@ public class InvoiceConfiguration {
   private static final String DATABASE_LOCATION = "db";
 
   @Bean
-  public JsonService jsonService() {
-    return new JsonService();
-  }
-
-  @Bean
-  public FilesService filesService() {
-    return new FilesService();
-  }
-
-  @Bean
   @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
   public InMemoryDatabase inMemoryDatabase() {
+    log.info("loading in-memory database");
     return new InMemoryDatabase();
   }
 
   @Bean
-  public InvoiceService invoiceService(@Qualifier("fileBasedDatabase") Database database) {
-    return new InvoiceService(database);
-  }
-
-  @Bean
+  @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
   public IdProvider idService(FilesService filesService) throws IOException {
     Path idFilePath = Files.createTempFile(DATABASE_LOCATION, ID_FILE_NAME);
     return new IdProvider(idFilePath, filesService);
@@ -54,14 +39,12 @@ public class InvoiceConfiguration {
 
   @Bean
   @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
-  public Database fileBasedDatabase(IdProvider idService, FilesService filesService, JsonService jsonService) throws IOException {
+  public Database fileBasedDatabase(IdProvider idService, FilesService filesService, JsonService jsonService,
+                                    @Value("${database.path:/db/defaultDb.json}") String databasePath) throws IOException {
+    log.info("loading filebased database");
+    log.debug(databasePath);
     Path databaseFilePath = Files.createTempFile(DATABASE_LOCATION, INVOICES_FILE_NAME);
     return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService);
   }
-
-  @Bean
-  public TaxCalculatorService taxCalculatorService(Database database) {
-    return new TaxCalculatorService(database);
-  }
-
 }
+

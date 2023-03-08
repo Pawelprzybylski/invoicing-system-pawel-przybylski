@@ -3,11 +3,13 @@ package pl.futurecollars.invoicing.service;
 import java.math.BigDecimal;
 import java.util.function.Predicate;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.model.InvoiceEntry;
 
 @AllArgsConstructor
+@Service
 public class TaxCalculatorService {
 
   private final Database database;
