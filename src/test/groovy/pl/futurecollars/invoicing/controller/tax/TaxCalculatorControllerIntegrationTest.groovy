@@ -103,7 +103,7 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
                 .entries(List.of(
                         InvoiceEntry.builder()
                                 .vatValue(BigDecimal.valueOf(23.45))
-                                .netPrice(BigDecimal.valueOf(100))
+                                .netPrice(BigDecimal.valueOf(111.73))
                                 .expenseRelatedToCar(
                                         Car.builder()
                                                 .personalUse(true)
@@ -119,9 +119,9 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
         def taxCalculatorResponse = calculateTax(invoice.getSeller())
 
         then: "no proportion - it applies only when you are the buyer"
-        taxCalculatorResponse.income == 100
+        taxCalculatorResponse.income == 111.73
         taxCalculatorResponse.costs == 0
-        taxCalculatorResponse.incomeMinusCosts == 100
+        taxCalculatorResponse.incomeMinusCosts == 111.73
         taxCalculatorResponse.collectedVat == 23.45
         taxCalculatorResponse.paidVat == 0
         taxCalculatorResponse.vatToReturn == 23.45
@@ -134,8 +134,8 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
         taxCalculatorResponse.costs == 111.73
         taxCalculatorResponse.incomeMinusCosts == -111.73
         taxCalculatorResponse.collectedVat == 0
-        taxCalculatorResponse.paidVat == 11.72
-        taxCalculatorResponse.vatToReturn == -11.72
+        taxCalculatorResponse.paidVat == 23.45
+        taxCalculatorResponse.vatToReturn == -23.45
     }
 
     def "All calculations are executed correctly"() {
