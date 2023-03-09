@@ -9,12 +9,12 @@ import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
 
 class InvoiceServiceIntegrationTest extends Specification {
 
-    private InvoiceService service;
-    private List<Invoice> invoices;
+    private InvoiceService service
+    private List<Invoice> invoices
 
     def setup() {
-        Database db = new InMemoryDatabase();
-        service = new InvoiceService(db);
+        Database db = new InMemoryDatabase()
+        service = new InvoiceService(db)
 
         invoices = (1..12).collect { invoice(it) }
     }
