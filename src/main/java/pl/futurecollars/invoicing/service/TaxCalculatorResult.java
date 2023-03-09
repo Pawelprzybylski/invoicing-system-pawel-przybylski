@@ -21,10 +21,10 @@ public class TaxCalculatorResult {
   private final BigDecimal earnings;
 
   @ApiModelProperty(value = "Collected VAT (calculated by application)", required = true, example = "800")
-  private final BigDecimal incomingVat;
+  private final BigDecimal collectedVat;
 
   @ApiModelProperty(value = "Payed VAT (calculated by application)", required = true, example = "80")
-  private final BigDecimal outgoingVat;
+  private final BigDecimal paidVat;
 
   @ApiModelProperty(value = "Outstanding VAT (calculated by application)", required = true, example = "720")
   private final BigDecimal vatToReturn;
