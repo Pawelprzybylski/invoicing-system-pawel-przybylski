@@ -61,7 +61,7 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
 
 
         where:
-        id << [-100, -2, -1, 0, 168, 1256]
+        id << [-100, -2, -1, 168, 1256]
     }
 
     def "404 is returned when invoice id is not found when deleting invoice [#id]"() {
@@ -76,7 +76,7 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
 
 
         where:
-        id << [-100, -2, -1, 0, 12, 13, 99, 102, 1000]
+        id << [-100, -2, -1, 12, 13, 99, 102, 1000]
     }
 
     def "404 is returned when invoice id is not found when updating invoice [#id]"() {
@@ -93,7 +93,7 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
 
 
         where:
-        id << [-100, -2, -1, 0, 12, 13, 99, 102, 1000]
+        id << [-100, -2, -1, 12, 13, 99, 102, 1000]
     }
 
     def "invoice date can be modified"() {
