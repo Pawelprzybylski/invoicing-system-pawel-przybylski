@@ -17,13 +17,13 @@ public class InvoiceEntry {
   private String description;
 
   @ApiModelProperty(value = "Number of items", required = true, example = "9")
-  private int quantity;
+  private int quantity = 0;
 
   @ApiModelProperty(value = "Product/service net price", required = true, example = "425.09")
-  private BigDecimal netPrice;
+  private BigDecimal netPrice = new BigDecimal(0);
 
   @ApiModelProperty(value = "Product/service tax value", required = true, example = "97.77")
-  private BigDecimal vatValue;
+  private BigDecimal vatValue = new BigDecimal(0);
 
   @ApiModelProperty(value = "Tax rate", required = true)
   private Vat vatRate;

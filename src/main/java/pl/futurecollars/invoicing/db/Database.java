@@ -2,6 +2,7 @@ package pl.futurecollars.invoicing.db;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -28,6 +29,7 @@ public interface Database {
         .filter(invoicePredicate)
         .flatMap(i -> i.getEntries().stream())
         .map(invoiceEntryToValue)
+        .filter(Objects::nonNull)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
