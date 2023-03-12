@@ -46,5 +46,5 @@ public class InvoiceConfiguration {
     Path databaseFilePath = Files.createTempFile(DATABASE_LOCATION, INVOICES_FILE_NAME);
     return new FileBasedDatabase(databaseFilePath, idService, filesService, jsonService);
   }
-
 }
+
