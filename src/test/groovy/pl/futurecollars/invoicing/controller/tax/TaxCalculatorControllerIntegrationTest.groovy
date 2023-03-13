@@ -131,12 +131,14 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
 
         then: "proportion applied - it applies when you are the buyer"
         taxCalculatorResponse.income == 0
-        taxCalculatorResponse.costs == 111.73
-        taxCalculatorResponse.incomeMinusCosts == -111.73
+        taxCalculatorResponse.costs == 123.46
+        taxCalculatorResponse.incomeMinusCosts == -123.46
         taxCalculatorResponse.collectedVat == 0
         taxCalculatorResponse.paidVat == 23.45
         taxCalculatorResponse.vatToReturn == -23.45
     }
+
+
 
     def "All calculations are executed correctly"() {
         given:
@@ -152,6 +154,7 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
                 .entries(List.of(
                         InvoiceEntry.builder()
                                 .netPrice(76011.62)
+                                .vatValue(1.0)
                                 .build()
                 ))
                 .build()
@@ -162,6 +165,7 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
                 .entries(List.of(
                         InvoiceEntry.builder()
                                 .netPrice(11329.47)
+                                .vatValue(1.0)
                                 .build()
                 ))
                 .build()
@@ -186,8 +190,8 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
             incomeTaxMinusHealthInsurance == 11916.42
             finalIncomeTax == 11916
 
-            collectedVat == 0
-            paidVat == 0
+            collectedVat == 1
+            paidVat == 1
             vatToReturn == 0
         }
     }

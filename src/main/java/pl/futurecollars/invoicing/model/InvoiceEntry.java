@@ -16,9 +16,11 @@ public class InvoiceEntry {
   @ApiModelProperty(value = "Product/service description", required = true, example = "Lego 21309 Saturn V")
   private String description;
 
+  @Builder.Default
   @ApiModelProperty(value = "Number of items", required = true, example = "9")
   private int quantity = 0;
 
+  @Builder.Default
   @ApiModelProperty(value = "Product/service net price", required = true, example = "425.09")
   private BigDecimal netPrice = new BigDecimal(0);
 
