@@ -47,4 +47,3 @@ public class InvoiceController implements InvoiceApi {
   }
 
 }
-

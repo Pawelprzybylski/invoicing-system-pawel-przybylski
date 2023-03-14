@@ -8,8 +8,9 @@ import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.model.InvoiceEntry;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
+
 public class TaxCalculatorService {
 
   private final Database database;
