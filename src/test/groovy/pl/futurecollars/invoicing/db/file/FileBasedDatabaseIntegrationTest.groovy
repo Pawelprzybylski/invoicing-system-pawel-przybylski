@@ -1,5 +1,6 @@
 package pl.futurecollars.invoicing.db.file
 
+import java.nio.file.Path
 import pl.futurecollars.invoicing.db.AbstractDatabaseTest
 import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.helpers.TestHelpers
@@ -10,7 +11,7 @@ import java.nio.file.Files
 
 class FileBasedDatabaseIntegrationTest extends AbstractDatabaseTest {
 
-    def dbPath
+    Path dbPath
 
     @Override
     Database getDatabaseInstance() {
