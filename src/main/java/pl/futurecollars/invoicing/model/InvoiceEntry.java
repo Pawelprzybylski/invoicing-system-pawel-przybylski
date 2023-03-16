@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InvoiceEntry {
 
+  @ApiModelProperty(value = "Invoice number (assigned by user)", required = true, example = "2020/03/08/0000001")
+  private String number;
+
   @ApiModelProperty(value = "Product/service description", required = true, example = "Lego 21309 Saturn V")
   private String description;
 

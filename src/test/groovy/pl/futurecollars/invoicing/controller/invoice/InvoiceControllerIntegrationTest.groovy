@@ -7,7 +7,9 @@ import pl.futurecollars.invoicing.controller.AbstractControllerTest
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
+import spock.lang.Unroll
 
+@Unroll
 class InvoiceControllerIntegrationTest extends AbstractControllerTest {
 
     def "empty array is returned when no invoices were added"() {

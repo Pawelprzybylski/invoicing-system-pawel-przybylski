@@ -1,5 +1,6 @@
 buildscript {
     ext {
+        flywayVersion = '7.6.0'
         lombokVersion = '1.18.18'
         spockVersion = '1.3-groovy-2.5'
         springBootVersion = '2.4.2'
@@ -34,11 +35,17 @@ repositories {
 dependencies {
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
 
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation "io.springfox:springfox-boot-starter:${springFoxStarterVersion}"
     implementation "io.springfox:springfox-swagger-ui:${springFoxUiVersion}"
+
+    runtimeOnly 'com.h2database:h2:1.4.200'
+    runtimeOnly 'org.postgresql:postgresql:42.2.19'
 
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
@@ -94,3 +101,19 @@ test {
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
 }
+
+task testWithFileDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'file'
+}
+
+task testWithMemoryDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'memory'
+}
+
+task testWithSqlDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'sql'
+}
+
+check.dependsOn testWithFileDatabase
+check.dependsOn testWithMemoryDatabase
+//check.dependsOn testWithSqlDatabase
