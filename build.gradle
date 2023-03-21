@@ -40,14 +40,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.spockframework:spock-core:${spockVersion}"
     testImplementation "org.spockframework:spock-spring:${spockVersion}"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-    runtimeOnly 'org.postgresql:postgresql:42.2.19'
-    runtimeOnly 'com.h2database:h2:1.4.200'
-    implementation "org.flywaydb:flyway-core:${flywayVersion}"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "org.spockframework:spock-core:${spockVersion}"
-    testImplementation "org.spockframework:spock-spring:${spockVersion}"
 }
 
 java {
@@ -103,10 +95,6 @@ task testWithMemoryDatabase(type: Test) {
 task testWithSQLDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'sql'
 }
-task testWithPostgreSqlDatabase(type: Test) { // only for local use
-    systemProperty 'spring.profiles.active', 'sql-pg'
-}
-
 
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
