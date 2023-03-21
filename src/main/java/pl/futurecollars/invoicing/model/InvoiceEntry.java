@@ -1,5 +1,6 @@
 package pl.futurecollars.invoicing.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
@@ -13,15 +14,15 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InvoiceEntry {
 
+  @JsonIgnore
   @ApiModelProperty(value = "Invoice number (assigned by user)", required = true, example = "2020/03/08/0000001")
-  private String number;
+  private int id;
 
   @ApiModelProperty(value = "Product/service description", required = true, example = "Lego 21309 Saturn V")
   private String description;
 
-  @Builder.Default
   @ApiModelProperty(value = "Number of items", required = true, example = "9")
-  private int quantity = 0;
+  private int quantity;
 
   @Builder.Default
   @ApiModelProperty(value = "Product/service net price", required = true, example = "425.09")

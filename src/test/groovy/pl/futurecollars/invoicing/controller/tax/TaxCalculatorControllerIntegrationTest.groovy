@@ -6,6 +6,9 @@ import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.model.InvoiceEntry
 import spock.lang.Unroll
+import pl.futurecollars.invoicing.model.Vat
+
+import java.time.LocalDate
 
 import static pl.futurecollars.invoicing.helpers.TestHelpers.company
 
@@ -98,15 +101,19 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
     def "tax is calculated correctly when car is used for personal purposes"() {
         given:
         def invoice = Invoice.builder()
+                .date(LocalDate.now())
+                .number("123/4242/43221/")
                 .seller(company(1))
                 .buyer(company(2))
                 .entries(List.of(
                         InvoiceEntry.builder()
                                 .vatValue(BigDecimal.valueOf(23.45))
+                                .vatRate(Vat.VAT_23)
                                 .netPrice(BigDecimal.valueOf(111.73))
                                 .expenseRelatedToCar(
                                         Car.builder()
                                                 .personalUse(true)
+                                                .registrationNumber("OSF 3535")
                                                 .build()
                                 )
                                 .build()
@@ -139,33 +146,40 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
     }
 
 
-
     def "All calculations are executed correctly"() {
         given:
         def ourCompany = Company.builder()
                 .taxIdentificationNumber("1234")
+                .address("ul. Bukowińska 24d/ 02-703 Warszawa, Polska")
+                .name("XYZ")
                 .pensionInsurance(514.57)
                 .healthInsurance(319.94)
                 .build()
 
         def invoiceWithIncome = Invoice.builder()
+                .date(LocalDate.now())
+                .number("3523")
                 .seller(ourCompany)
                 .buyer(company(2))
                 .entries(List.of(
                         InvoiceEntry.builder()
                                 .netPrice(76011.62)
                                 .vatValue(1.0)
+                        .vatRate(Vat.VAT_0)
                                 .build()
                 ))
                 .build()
 
         def invoiceWithCosts = Invoice.builder()
+                .date(LocalDate.now())
+                .number("dsgs")
                 .seller(company(4))
                 .buyer(ourCompany)
                 .entries(List.of(
                         InvoiceEntry.builder()
                                 .netPrice(11329.47)
                                 .vatValue(1.0)
+                        .vatRate(Vat.VAT_ZW)
                                 .build()
                 ))
                 .build()
