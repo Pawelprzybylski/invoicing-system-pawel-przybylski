@@ -21,6 +21,7 @@ version = '0.0.1-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springframework.boot:spring-boot-starter-jdbc"
@@ -39,7 +40,16 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.spockframework:spock-core:${spockVersion}"
     testImplementation "org.spockframework:spock-spring:${spockVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    runtimeOnly 'org.postgresql:postgresql:42.2.19'
+    runtimeOnly 'com.h2database:h2:1.4.200'
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.spockframework:spock-core:${spockVersion}"
+    testImplementation "org.spockframework:spock-spring:${spockVersion}"
 }
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(15)
@@ -97,6 +107,8 @@ task testWithPostgreSqlDatabase(type: Test) { // only for local use
     systemProperty 'spring.profiles.active', 'sql-pg'
 }
 
+
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
 check.dependsOn testWithSQLDatabase
+

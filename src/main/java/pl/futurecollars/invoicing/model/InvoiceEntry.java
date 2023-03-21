@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InvoiceEntry {
 
+
   @JsonIgnore
   @ApiModelProperty(value = "Invoice number (assigned by user)", required = true, example = "2020/03/08/0000001")
   private int id;

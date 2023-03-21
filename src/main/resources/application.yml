@@ -16,3 +16,4 @@ spring:
     active: sql
   flyway:
     enabled: true
+

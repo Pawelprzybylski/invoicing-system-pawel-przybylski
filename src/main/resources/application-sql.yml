@@ -9,3 +9,4 @@ spring:
 
 invoicing-system:
   database: sql
+
