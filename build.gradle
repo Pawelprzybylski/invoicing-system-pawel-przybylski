@@ -1,79 +1,63 @@
 buildscript {
     ext {
-        flywayVersion = '7.6.0'
-        lombokVersion = '1.18.18'
+        jacksonVersion = '2.11.1'
+        lombokVersion = '1.18.16'
         spockVersion = '1.3-groovy-2.5'
-        springBootVersion = '2.4.2'
-        springDependencyManagementVersion = '1.0.11.RELEASE'
+        springBootVersion = '2.4.4'
         springFoxStarterVersion = '3.0.0'
-        springFoxUiVersion = '3.0.0'
+        springFoxUiVersion = '2.9.2'
+        flywayVersion = '7.11.3'
     }
 }
-
 plugins {
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'groovy'
     id 'checkstyle'
     id 'jacoco'
-    id 'org.springframework.boot' version "${springBootVersion}"
-    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
-    id 'java'
 }
-
-group = 'pl.futurecollars'
+group = 'pl.futurecollars.invoicing'
 version = '0.0.1-SNAPSHOT'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
-    implementation "org.flywaydb:flyway-core:${flywayVersion}"
-
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.springframework.boot:spring-boot-starter-jdbc"
     implementation "io.springfox:springfox-boot-starter:${springFoxStarterVersion}"
     implementation "io.springfox:springfox-swagger-ui:${springFoxUiVersion}"
-
-    runtimeOnly 'com.h2database:h2:1.4.200'
-    runtimeOnly 'org.postgresql:postgresql:42.2.19'
-
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    runtimeOnly 'org.postgresql:postgresql:42.2.19'
+    runtimeOnly 'com.h2database:h2:1.4.200'
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.spockframework:spock-core:${spockVersion}"
     testImplementation "org.spockframework:spock-spring:${spockVersion}"
 }
 
-
-checkstyle {
-    showViolations = true
-    ignoreFailures = false
-    maxWarnings = 0
-    maxErrors = 0
-}
-
-jacocoTestCoverageVerification {
-
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude:  [ 'pl/futurecollars/invoicing/controller/tax/*',
-                                          'pl/futurecollars/invoicing/service/TaxCalculatorService.class'])
-        }))
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(15)
+        vendor = JvmVendorSpec.ADOPTOPENJDK
     }
-
-
+}
+test {
+    finalizedBy jacocoTestReport
+}
+jacocoTestReport {
+    dependsOn test
+}
+jacoco {
+    toolVersion = "0.8.6"
+}
+jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
@@ -88,32 +72,31 @@ jacocoTestCoverageVerification {
             }
         }
     }
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(14)
-        vendor = JvmVendorSpec.ADOPTOPENJDK
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "pl/futurecollars/invoicing/App.class"
+            ])
+        }))
     }
 }
-
-test {
-    finalizedBy jacocoTestReport
-    finalizedBy jacocoTestCoverageVerification
+checkstyle {
+    showViolations = true
+    ignoreFailures = false
+    maxWarnings = 0
+    maxErrors = 0
 }
-
 task testWithFileDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'file'
 }
-
 task testWithMemoryDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'memory'
 }
-
-task testWithSqlDatabase(type: Test) {
+task testWithSQLDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'sql'
 }
 
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
-//check.dependsOn testWithSqlDatabase
+check.dependsOn testWithSQLDatabase
+

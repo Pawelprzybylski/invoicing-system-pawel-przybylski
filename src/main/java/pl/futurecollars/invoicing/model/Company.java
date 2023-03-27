@@ -1,5 +1,6 @@
 package pl.futurecollars.invoicing.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
@@ -13,8 +14,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Company {
 
+  @JsonIgnore
   @ApiModelProperty(value = "Company id", required = true, example = "54")
-  private long id;
+  private int id;
 
   @ApiModelProperty(value = "Tax Identification Number", required = true, example = "443-112-33-11")
   private String taxIdentificationNumber;

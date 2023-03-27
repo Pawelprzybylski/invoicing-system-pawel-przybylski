@@ -29,9 +29,9 @@ class InvoiceControllerStepwiseTest extends Specification {
     @Autowired
     private JsonService jsonService
 
-    private Invoice originalInvoice = TestHelpers.invoice(1)
+    private final Invoice originalInvoice = TestHelpers.invoice(1)
 
-    private LocalDate updatedDate = LocalDate.of(2020, 02, 28)
+    private final LocalDate updatedDate = LocalDate.of(2020, 02, 28)
 
     @Shared
     private int invoiceId
@@ -47,7 +47,6 @@ class InvoiceControllerStepwiseTest extends Specification {
         then:
         response == "[]"
     }
-
 
     def "add single invoice"() {
         given:
@@ -157,4 +156,5 @@ class InvoiceControllerStepwiseTest extends Specification {
         mockMvc.perform(get("/invoices/$invoiceId"))
                 .andExpect(status().isNotFound())
     }
+
 }

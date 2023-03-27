@@ -42,13 +42,13 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
     def "correct invoice is returned when getting by id"() {
         given:
         def expectedInvoices = addUniqueInvoices(5)
-        def verifiedInvoice = expectedInvoices.get(2)
+        def expectedInvoice = expectedInvoices.get(2)
 
         when:
-        def invoice = getInvoiceById(verifiedInvoice.getId())
+        def invoice = getInvoiceById(expectedInvoice.getId())
 
         then:
-        invoice == verifiedInvoice
+        invoice == expectedInvoice
     }
 
     def "404 is returned when invoice id is not found when getting invoice by id [#id]"() {
@@ -100,13 +100,13 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
 
     def "invoice date can be modified"() {
         given:
-        def id = addInvoiceAndReturnId(invoice(44))
-        def updatedInvoice = invoice(123)
+        def id = addInvoiceAndReturnId(invoice(1))
+        def updatedInvoice = invoice(1)
         updatedInvoice.id = id
 
         expect:
         mockMvc.perform(
-                put("$AbstractControllerTest.INVOICE_ENDPOINT/$id")
+                put("$INVOICE_ENDPOINT/$id")
                         .content(jsonService.toJson(updatedInvoice))
                         .contentType(MediaType.APPLICATION_JSON)
         )
