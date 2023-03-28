@@ -108,6 +108,7 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
                 .entries(List.of(
                         InvoiceEntry.builder()
                                 .vatValue(BigDecimal.valueOf(23.45))
+                        .quantity(1.0)
                                 .vatRate(Vat.VAT_23)
                                 .netPrice(BigDecimal.valueOf(111.73))
                                 .expenseRelatedToCar(
@@ -165,6 +166,7 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
                         InvoiceEntry.builder()
                                 .netPrice(76011.62)
                                 .vatValue(1.0)
+                        .quantity(1.0)
                         .vatRate(Vat.VAT_0)
                                 .build()
                 ))
@@ -179,6 +181,7 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
                         InvoiceEntry.builder()
                                 .netPrice(11329.47)
                                 .vatValue(1.0)
+                        .quantity(1.0)
                         .vatRate(Vat.VAT_ZW)
                                 .build()
                 ))

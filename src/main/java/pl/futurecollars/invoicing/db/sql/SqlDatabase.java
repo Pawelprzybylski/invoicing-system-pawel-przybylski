@@ -117,7 +117,7 @@ public class SqlDatabase implements Database {
               + "where invoice_id = " + invoiceId,
           (response, ignored) -> InvoiceEntry.builder()
               .description(response.getString("description"))
-              .quantity(response.getInt("quantity"))
+              .quantity(response.getBigDecimal("quantity"))
               .netPrice(response.getBigDecimal("net_price"))
               .vatValue(response.getBigDecimal("vat_value"))
               .vatRate(Vat.valueOf(response.getString("vat_rate")))
@@ -219,7 +219,7 @@ public class SqlDatabase implements Database {
                     + "values (?, ?, ?, ?, ?, ?);",
                 new String[] {"id"});
         ps.setString(1, entry.getDescription());
-        ps.setInt(2, entry.getQuantity());
+        ps.setBigDecimal(2, entry.getQuantity());
         ps.setBigDecimal(3, entry.getNetPrice());
         ps.setBigDecimal(4, entry.getVatValue());
         ps.setString(5, entry.getVatRate().name());

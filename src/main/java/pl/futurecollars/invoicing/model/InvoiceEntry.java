@@ -35,7 +35,7 @@ public class InvoiceEntry {
   private String description;
 
   @ApiModelProperty(value = "Number of items", required = true, example = "9")
-  private int quantity;
+  private BigDecimal quantity;
 
   @Builder.Default
   @ApiModelProperty(value = "Product/service net price", required = true, example = "425.09")
@@ -48,7 +48,7 @@ public class InvoiceEntry {
   @ApiModelProperty(value = "Tax rate", required = true)
   private Vat vatRate;
 
-  @JoinColumn(name = "car_expense")
+  @JoinColumn(name = "expense_related_to_car")
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
   @ApiModelProperty(value = "Car this expense is related to, empty if expense is not related to car")
   private Car expenseRelatedToCar;
