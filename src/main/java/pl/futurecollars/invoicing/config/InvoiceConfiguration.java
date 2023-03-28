@@ -57,7 +57,6 @@ public class InvoiceConfiguration {
     return new SqlDatabase(jdbcTemplate);
   }
 
-
   @Bean
   @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "jpa")
   public Database jpaDatabase(InvoiceRepository invoiceRepository) {
@@ -65,4 +64,3 @@ public class InvoiceConfiguration {
   }
 
 }
-

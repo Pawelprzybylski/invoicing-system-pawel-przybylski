@@ -55,4 +55,5 @@ public class JpaDatabase implements Database {
 
     return invoice;
   }
+
 }

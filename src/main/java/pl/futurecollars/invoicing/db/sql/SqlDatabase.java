@@ -2,11 +2,8 @@ package pl.futurecollars.invoicing.db.sql;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
