@@ -11,5 +11,8 @@ spring:
     password: admin
     driver-class-name: org.postgresql.Driver
 
+server:
+  port: 7777
+
 invoicing-system:
   database: jpa

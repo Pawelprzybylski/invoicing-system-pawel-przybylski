@@ -1,5 +1,5 @@
 server:
-port: 7777
+  port: 7777
 logging:
   level:
     org:
@@ -12,6 +12,6 @@ logging:
 
 spring:
   profiles:
-    active: jpa-flyway
+    active: jpa
   flyway:
     enabled: false
