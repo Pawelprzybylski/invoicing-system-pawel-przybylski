@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL94Dialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/invoicing-jpa
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+invoicing-system:
+  database: jpa

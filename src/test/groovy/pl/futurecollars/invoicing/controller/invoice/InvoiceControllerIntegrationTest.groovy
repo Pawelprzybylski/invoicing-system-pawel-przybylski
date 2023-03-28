@@ -100,7 +100,7 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
 
     def "invoice date can be modified"() {
         given:
-        def id = addInvoiceAndReturnId(invoice(1))
+        def id = addInvoiceAndReturnId(invoice(4))
         def updatedInvoice = invoice(1)
         updatedInvoice.id = id
 
@@ -112,7 +112,9 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
         )
                 .andExpect(status().isNoContent())
 
-        getInvoiceById(id) == updatedInvoice
+        def invoiceFromDbAfterUpdate = getInvoiceById(id).toString()
+        def expectedInvoice = updatedInvoice.toString()
+        invoiceFromDbAfterUpdate == expectedInvoice
     }
 
     def "invoice can be deleted"() {
