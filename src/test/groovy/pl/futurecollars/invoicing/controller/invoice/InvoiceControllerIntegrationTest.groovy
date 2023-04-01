@@ -41,14 +41,15 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
 
     def "correct invoice is returned when getting by id"() {
         given:
-        def expectedInvoices = addUniqueInvoices(3)
+        def expectedInvoices = addUniqueInvoices(5)
         def verifiedInvoice = expectedInvoices.get(2)
 
         when:
         def invoice = getInvoiceById(verifiedInvoice.getId())
 
         then:
-        invoice == verifiedInvoice    }
+        invoice == verifiedInvoice
+    }
 
     def "404 is returned when invoice id is not found when getting invoice by id [#id]"() {
         given:

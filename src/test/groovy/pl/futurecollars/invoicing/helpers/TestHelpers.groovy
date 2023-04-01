@@ -21,7 +21,7 @@ class TestHelpers {
     static product(long id) {
         InvoiceEntry.builder()
                 .description("Programming course $id")
-                .quantity(0)
+                .quantity(BigDecimal.ZERO.setScale(2))
                 .netPrice(BigDecimal.valueOf(id * 1000).setScale(2))
                 .vatValue(BigDecimal.valueOf(id * 1000 * 0.08).setScale(2))
                 .vatRate(Vat.VAT_8)

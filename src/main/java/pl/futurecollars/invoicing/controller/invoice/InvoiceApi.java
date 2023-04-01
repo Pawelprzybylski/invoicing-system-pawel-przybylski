@@ -15,7 +15,6 @@ import pl.futurecollars.invoicing.model.Invoice;
 
 @RequestMapping(value = "invoices", produces = {"application/json;charset=UTF-8"})
 @Api(tags = {"invoice-controller"})
-
 public interface InvoiceApi {
 
   @ApiOperation(value = "Get list of all invoices")
@@ -37,5 +36,4 @@ public interface InvoiceApi {
   @ApiOperation(value = "Update invoice with given id")
   @PutMapping("/{id}")
   ResponseEntity<?> update(@PathVariable int id, @RequestBody Invoice invoice);
-
 }

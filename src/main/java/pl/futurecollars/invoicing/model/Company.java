@@ -20,10 +20,10 @@ import lombok.NoArgsConstructor;
 public class Company {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonIgnore
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @ApiModelProperty(value = "Company id", required = true, example = "54")
-  private long id;
+  private Long id;
 
   @ApiModelProperty(value = "Tax Identification Number", required = true, example = "443-112-33-11")
   private String taxIdentificationNumber;
