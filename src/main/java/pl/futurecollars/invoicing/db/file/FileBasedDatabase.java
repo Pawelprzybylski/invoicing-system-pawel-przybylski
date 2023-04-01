@@ -88,6 +88,7 @@ public class FileBasedDatabase implements Database {
     invoice.setBuyer(data.getBuyer());
     invoice.setSeller(data.getSeller());
     invoice.setEntries(data.getEntries());
+    invoice.setNumber(data.getNumber());
   }
 
   @Override
