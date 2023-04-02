@@ -77,7 +77,6 @@ public class InvoiceConfiguration {
     return new JpaDatabase(invoiceRepository);
   }
 
-
   @Bean
   @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "mongo")
   public MongoDatabase mongoDb(
@@ -114,6 +113,4 @@ public class InvoiceConfiguration {
     MongoCollection<Invoice> collection = mongoDb.getCollection(collectionName, Invoice.class);
     return new MongoBasedDatabase(collection, mongoIdProvider);
   }
-
-
 }
