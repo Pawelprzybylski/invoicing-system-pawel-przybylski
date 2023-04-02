@@ -21,7 +21,7 @@ public class InvoiceController implements InvoiceApi {
   }
 
   @Override
-  public int add(@RequestBody Invoice invoice) {
+  public long add(@RequestBody Invoice invoice) {
     return invoiceService.save(invoice);
   }
 

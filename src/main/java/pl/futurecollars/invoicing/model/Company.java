@@ -3,6 +3,10 @@ package pl.futurecollars.invoicing.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +16,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 public class Company {
 
+  @Id
   @JsonIgnore
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @ApiModelProperty(value = "Company id", required = true, example = "54")
-  private int id;
+  private Long id;
 
   @ApiModelProperty(value = "Tax Identification Number", required = true, example = "443-112-33-11")
   private String taxIdentificationNumber;

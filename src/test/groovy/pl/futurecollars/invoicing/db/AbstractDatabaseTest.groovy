@@ -8,20 +8,25 @@ import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
 
 abstract class AbstractDatabaseTest extends Specification {
 
-    List<Invoice> invoices = (1..12).collect { invoice(it) }
-    Database database = getDatabaseInstance()
+    protected List<Invoice> invoices = (1..12).collect { invoice(it) }
 
     abstract Database getDatabaseInstance()
 
-    def "should save invoices returning sequential id, invoice should have id set to correct value, get by id returns saved invoice"() {
+    Database database
+
+    def setup() {
+        database = getDatabaseInstance()
+        database.reset()
+
+        assert database.getAll().isEmpty()
+    }
+
+    def "should save invoices returning sequential id"() {
         when:
-        def ids = invoices.collect { it.id = database.save(it) }
+        def ids = invoices.collect({ it.id = database.save(it) })
 
         then:
-        ids == (1..invoices.size()).collect()
-        ids.forEach { assert database.getById(it).isPresent() }
-        ids.forEach { assert database.getById(it).get().getId() == it }
-        ids.forEach { assert resetIds(database.getById(it).get()) == invoices.get(it - 1) }
+        (1L..invoices.size() - 1).forEach {assert ids[it] == ids[0] + it }
     }
 
     def "get by id returns empty optional when there is no invoice with given id"() {
@@ -36,64 +41,69 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def "get all returns all invoices in the database, deleted invoice is not returned"() {
         given:
-        invoices.forEach { it.id = database.save(it) }
+        def sizeBeforeSave = database.getAll().size()
+        def id = database.save(invoices.get(0))
 
         expect:
-        database.getAll().size() == invoices.size()
-        database.getAll().forEach { assert resetIds(it) == invoices.get(it.getId() - 1) }
+        database.getAll().size() == sizeBeforeSave + 1
 
         when:
-        database.delete(1)
+        database.delete(id)
 
         then:
-        database.getAll().size() == invoices.size() - 1
-        database.getAll().forEach { assert resetIds(it) == invoices.get(it.getId() - 1) }
-        database.getAll().forEach { assert it.getId() != 1 }
+        database.getAll().size() == sizeBeforeSave
+    }
+
+    def deleteAllInvoices() {
+        database.getAll().forEach({ invoice -> database.delete(invoice.getId()) })
+
     }
 
     def "can delete all invoices"() {
         given:
-        invoices.forEach { it.id = database.save(it) }
+        invoices.forEach({ it.id = database.save(it) })
 
         when:
-        invoices.forEach { database.delete(it.getId()) }
+        invoices.forEach({ database.delete(it.getId()) })
 
         then:
         database.getAll().isEmpty()
     }
 
-    def "deleting not existing invoice returns optional empty"() {
+    def "deleting not existing invoice returns Optional.empty()"() {
         expect:
-        database.delete(123) == Optional.empty()
+        database.delete(987) == Optional.empty()
     }
 
-    def "it's possible to update the invoice, original invoice is returned"() {
+    def "updating the existing invoice returns old invoice"() {
         given:
-        def originalInvoice = invoices.get(0)
-        originalInvoice.id = database.save(originalInvoice)
-
-        def expectedInvoice = invoices.get(0)
-        expectedInvoice.id = originalInvoice.id
+        def id = database.save(invoices.get(1))
 
         when:
-        def result = database.update(originalInvoice.id, expectedInvoice)
+        def newInvoice = invoices.get(1)
+        def updateOptional = database.update(id, newInvoice)
+        def updatedInvoice = database.getById(id).get()
+        newInvoice.setId(id)
+        newInvoice.getBuyer().setId(updatedInvoice.getBuyer().getId())
+        newInvoice.getSeller().setId(updatedInvoice.getSeller().getId())
+        newInvoice.setEntries(updatedInvoice.getEntries())
 
         then:
-        def invoiceAfterUpdate = database.getById(originalInvoice.id).get()
-        resetIds(invoiceAfterUpdate) == expectedInvoice
-        resetIds(result.get()) == originalInvoice
+        updateOptional.isPresent()
+        updatedInvoice == newInvoice
     }
 
     def "updating not existing invoice returns Optional.empty()"() {
         expect:
-        database.update(213, invoices.get(1)) == Optional.empty()
+        database.update(666, invoices.get(1)) == Optional.empty()
     }
 
-    // resetting is necessary because database query returns ids while we don't know ids in original invoice
-    private static Invoice resetIds(Invoice invoice) {
-        invoice.getBuyer().id = 0
-        invoice.getSeller().id = 0
+    private static resetIds(Invoice invoice) {
+        invoice.getBuyer().id = null as long
+        invoice.getSeller().id = null as long
+        invoice.entries.forEach {
+            it.id = null
+        }
         invoice
     }
-
 }

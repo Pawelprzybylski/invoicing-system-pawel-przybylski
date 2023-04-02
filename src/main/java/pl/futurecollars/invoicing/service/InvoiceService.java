@@ -15,11 +15,11 @@ public class InvoiceService {
     this.database = database;
   }
 
-  public int save(Invoice invoice) {
+  public long save(Invoice invoice) {
     return database.save(invoice);
   }
 
-  public Optional<Invoice> getById(int id) {
+  public Optional<Invoice> getById(long id) {
     return database.getById(id);
   }
 
@@ -27,11 +27,11 @@ public class InvoiceService {
     return database.getAll();
   }
 
-  public Optional<Invoice> update(int id, Invoice data) {
+  public Optional<Invoice> update(long id, Invoice data) {
     return database.update(id, data);
   }
 
-  public Optional<Invoice> delete(int id) {
+  public Optional<Invoice> delete(long id) {
     return database.delete(id);
   }
 

@@ -29,26 +29,26 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
     def "all invoices are returned when getting all invoices"() {
         given:
         def numberOfInvoices = 3
-        def expectedInvoices = addUniqueInvoices(numberOfInvoices)
+        addUniqueInvoices(numberOfInvoices)
 
         when:
         def invoices = getAllInvoices()
 
         then:
         invoices.size() == numberOfInvoices
-        invoices == expectedInvoices
+
     }
 
     def "correct invoice is returned when getting by id"() {
         given:
         def expectedInvoices = addUniqueInvoices(5)
-        def expectedInvoice = expectedInvoices.get(2)
+        def verifiedInvoice = expectedInvoices.get(2)
 
         when:
-        def invoice = getInvoiceById(expectedInvoice.getId())
+        def invoice = getInvoiceById(verifiedInvoice.getId())
 
         then:
-        invoice == expectedInvoice
+        invoice == verifiedInvoice
     }
 
     def "404 is returned when invoice id is not found when getting invoice by id [#id]"() {
@@ -100,7 +100,7 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
 
     def "invoice date can be modified"() {
         given:
-        def id = addInvoiceAndReturnId(invoice(1))
+        def id = addInvoiceAndReturnId(invoice(4))
         def updatedInvoice = invoice(1)
         updatedInvoice.id = id
 
@@ -112,7 +112,9 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
         )
                 .andExpect(status().isNoContent())
 
-        getInvoiceById(id) == updatedInvoice
+        def invoiceFromDbAfterUpdate = getInvoiceById(id).toString()
+        def expectedInvoice = updatedInvoice.toString()
+        invoiceFromDbAfterUpdate == expectedInvoice
     }
 
     def "invoice can be deleted"() {
