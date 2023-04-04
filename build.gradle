@@ -128,3 +128,7 @@ task testWithJpaFlywayDatabase(type: Test) {
         }
 
     }
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:all" << "-Xlint:-processing" << "-Werror"
+}

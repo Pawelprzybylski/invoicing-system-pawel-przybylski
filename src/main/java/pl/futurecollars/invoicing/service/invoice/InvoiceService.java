@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.service;
+package pl.futurecollars.invoicing.service.invoice;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +9,9 @@ import pl.futurecollars.invoicing.model.Invoice;
 @Service
 public class InvoiceService {
 
-  private final Database database;
+  private final Database<Invoice> database;
 
-  public InvoiceService(Database database) {
+  public InvoiceService(Database<Invoice> database) {
     this.database = database;
   }
 
@@ -28,6 +28,7 @@ public class InvoiceService {
   }
 
   public Optional<Invoice> update(long id, Invoice data) {
+    data.setId(id); // just in case it was not set
     return database.update(id, data);
   }
 

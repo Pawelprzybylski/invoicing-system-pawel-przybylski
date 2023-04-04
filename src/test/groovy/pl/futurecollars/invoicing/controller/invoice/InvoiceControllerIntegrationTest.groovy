@@ -2,11 +2,12 @@ package pl.futurecollars.invoicing.controller.invoice
 
 
 import org.springframework.http.MediaType
-import pl.futurecollars.invoicing.controller.AbstractControllerTest
+import pl.futurecollars.invoicing.controller.tax.AbstractControllerTest
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
+import static pl.futurecollars.invoicing.helpers.TestHelpers.resetIds
 import spock.lang.Unroll
 
 @Unroll
@@ -112,8 +113,8 @@ class InvoiceControllerIntegrationTest extends AbstractControllerTest {
         )
                 .andExpect(status().isNoContent())
 
-        def invoiceFromDbAfterUpdate = getInvoiceById(id).toString()
-        def expectedInvoice = updatedInvoice.toString()
+        def invoiceFromDbAfterUpdate = resetIds(getInvoiceById(id)).toString()
+        def expectedInvoice = resetIds(updatedInvoice).toString()
         invoiceFromDbAfterUpdate == expectedInvoice
     }
 

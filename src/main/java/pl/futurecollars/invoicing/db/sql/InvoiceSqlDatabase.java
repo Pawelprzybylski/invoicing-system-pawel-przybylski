@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,8 +15,7 @@ import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.model.InvoiceEntry;
 import pl.futurecollars.invoicing.model.Vat;
 
-@AllArgsConstructor
-public class SqlDatabase implements Database {
+public class InvoiceSqlDatabase extends AbstractSqlDatabase implements Database<Invoice> {
 
   public static final String SELECT_QUERY = "select i.id, i.date, i.number, "
       + "c1.id as seller_id, c1.name as seller_name, c1.tax_identification_number as seller_tax_id, c1.address as seller_address, "
@@ -27,7 +25,10 @@ public class SqlDatabase implements Database {
       + "from invoice i "
       + "inner join company c1 on i.seller = c1.id "
       + "inner join company c2 on i.buyer = c2.id";
-  private final JdbcTemplate jdbcTemplate;
+
+  public InvoiceSqlDatabase(JdbcTemplate jdbcTemplate) {
+    super(jdbcTemplate);
+  }
 
   @Override
   @Transactional
@@ -55,24 +56,6 @@ public class SqlDatabase implements Database {
 
     int invoiceId = keyHolder.getKey().intValue();
     return invoiceId;
-  }
-
-  private int insertCompany(Company buyer) {
-    GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
-    jdbcTemplate.update(connection -> {
-      PreparedStatement ps = connection.prepareStatement(
-          "insert into company (name, address, tax_identification_number, health_insurance, pension_insurance) values (?, ?, ?, ?, ?);",
-          new String[] {"id"});
-      ps.setString(1, buyer.getName());
-      ps.setString(2, buyer.getAddress());
-      ps.setString(3, buyer.getTaxIdentificationNumber());
-      ps.setBigDecimal(4, buyer.getHealthInsurance());
-      ps.setBigDecimal(5, buyer.getPensionInsurance());
-      return ps;
-    }, keyHolder);
-
-    return keyHolder.getKey().intValue();
   }
 
   private Integer insertCarAndGetItId(Car car) {
@@ -165,8 +148,11 @@ public class SqlDatabase implements Database {
       return originalInvoice;
     }
 
-    updateCompany(updatedInvoice.getBuyer(), originalInvoice.get().getBuyer());
-    updateCompany(updatedInvoice.getSeller(), originalInvoice.get().getSeller());
+    updatedInvoice.getBuyer().setId(originalInvoice.get().getBuyer().getId());
+    updateCompany(updatedInvoice.getBuyer());
+
+    updatedInvoice.getSeller().setId(originalInvoice.get().getSeller().getId());
+    updateCompany(updatedInvoice.getSeller());
 
     jdbcTemplate.update(connection -> {
       PreparedStatement ps =
@@ -186,27 +172,6 @@ public class SqlDatabase implements Database {
     addEntriesRelatedToInvoice(id, updatedInvoice);
 
     return originalInvoice;
-  }
-
-  private void updateCompany(Company buyer, Company buyer2) {
-    jdbcTemplate.update(connection -> {
-      PreparedStatement ps = connection.prepareStatement(
-          "update company "
-              + "set name=?, "
-              + "address=?, "
-              + "tax_identification_number=?, "
-              + "health_insurance=?, "
-              + "pension_insurance=? "
-              + "where id=?"
-      );
-      ps.setString(1, buyer.getName());
-      ps.setString(2, buyer.getAddress());
-      ps.setString(3, buyer.getTaxIdentificationNumber());
-      ps.setBigDecimal(4, buyer.getHealthInsurance());
-      ps.setBigDecimal(5, buyer.getPensionInsurance());
-      ps.setLong(6, buyer2.getId());
-      return ps;
-    });
   }
 
   private void addEntriesRelatedToInvoice(long invoiceId, Invoice invoice) {

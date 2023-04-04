@@ -1,6 +1,6 @@
 package pl.futurecollars.invoicing.controller.tax
 
-import pl.futurecollars.invoicing.controller.AbstractControllerTest
+
 import pl.futurecollars.invoicing.model.Car
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
