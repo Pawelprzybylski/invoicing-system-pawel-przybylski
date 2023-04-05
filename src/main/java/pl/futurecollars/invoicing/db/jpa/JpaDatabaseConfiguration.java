@@ -20,5 +20,4 @@ public class JpaDatabaseConfiguration {
   public Database<Company> companyJpaDatabase(CompanyRepository repository) {
     return new JpaDatabase<>(repository);
   }
-
 }

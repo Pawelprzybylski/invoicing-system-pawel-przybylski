@@ -1,4 +1,3 @@
-
 package pl.futurecollars.invoicing.db.memory;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

@@ -1,6 +1,5 @@
 package pl.futurecollars.invoicing.model;
 
-
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import javax.persistence.Entity;

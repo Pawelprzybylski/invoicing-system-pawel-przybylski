@@ -20,7 +20,6 @@ public class FileBasedDatabase<T extends WithId> implements Database<T> {
   private final JsonService jsonService;
   private final Class<T> clazz;
 
-
   @Override
   public long save(T item) {
     try {
