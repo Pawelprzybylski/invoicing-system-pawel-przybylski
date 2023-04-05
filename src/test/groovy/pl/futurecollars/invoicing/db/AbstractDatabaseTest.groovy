@@ -80,20 +80,25 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def "updating the existing invoice returns old invoice"() {
         given:
-        def id = database.save(invoices.get(1))
+        def originalInvoice = invoices.get(0)
+        originalInvoice.id = database.save(originalInvoice)
+
+        def expectedInvoice = invoices.get(1)
+        expectedInvoice.id = originalInvoice.id
 
         when:
-        def newInvoice = invoices.get(1)
-        def updateOptional = database.update(id, newInvoice)
-        def updatedInvoice = database.getById(id).get()
-        newInvoice.setId(id)
-        newInvoice.getBuyer().setId(updatedInvoice.getBuyer().getId())
-        newInvoice.getSeller().setId(updatedInvoice.getSeller().getId())
-        newInvoice.setEntries(updatedInvoice.getEntries())
+        def result = database.update(originalInvoice.id, expectedInvoice)
 
         then:
-        updateOptional.isPresent()
-        updatedInvoice == newInvoice
+        def invoiceAfterUpdate = database.getById(originalInvoice.id).get()
+        def invoiceAfterUpdateAsString = resetIds(invoiceAfterUpdate).toString()
+        def expectedInvoiceAfterUpdateAsString = resetIds(expectedInvoice).toString()
+        invoiceAfterUpdateAsString == expectedInvoiceAfterUpdateAsString
+
+        and:
+        def invoiceBeforeUpdateAsString = resetIds(result.get()).toString()
+        def expectedInvoiceBeforeUpdateAsString = resetIds(originalInvoice).toString()
+        invoiceBeforeUpdateAsString == expectedInvoiceBeforeUpdateAsString
     }
 
     def "updating not existing invoice returns Optional.empty()"() {

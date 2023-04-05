@@ -1,6 +1,6 @@
 package pl.futurecollars.invoicing.controller.tax
 
-
+import pl.futurecollars.invoicing.controller.AbstractControllerTest
 import pl.futurecollars.invoicing.model.Car
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
@@ -102,19 +102,19 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
         given:
         def invoice = Invoice.builder()
                 .date(LocalDate.now())
-                .number("123/4242/43221/")
+                .number("no number :)")
                 .seller(company(1))
                 .buyer(company(2))
                 .entries(List.of(
                         InvoiceEntry.builder()
                                 .vatValue(BigDecimal.valueOf(23.45))
-                        .quantity(1.0)
                                 .vatRate(Vat.VAT_23)
-                                .netPrice(BigDecimal.valueOf(111.73))
+                                .netPrice(BigDecimal.valueOf(100))
+                                .quantity(1.0)
                                 .expenseRelatedToCar(
                                         Car.builder()
                                                 .personalUse(true)
-                                                .registrationNumber("OSF 3535")
+                                                .registrationNumber("KWI 555234")
                                                 .build()
                                 )
                                 .build()
@@ -127,25 +127,28 @@ class TaxCalculatorControllerIntegrationTest extends AbstractControllerTest {
         def taxCalculatorResponse = calculateTax(invoice.getSeller())
 
         then: "no proportion - it applies only when you are the buyer"
-        taxCalculatorResponse.income == 111.73
-        taxCalculatorResponse.costs == 0
-        taxCalculatorResponse.incomeMinusCosts == 111.73
-        taxCalculatorResponse.collectedVat == 23.45
-        taxCalculatorResponse.paidVat == 0
-        taxCalculatorResponse.vatToReturn == 23.45
+        with(taxCalculatorResponse) {
+            income == 100
+            costs == 0
+            incomeMinusCosts == 100
+            collectedVat == 23.45
+            paidVat == 0
+            vatToReturn == 23.45
+        }
 
         when:
         taxCalculatorResponse = calculateTax(invoice.getBuyer())
 
         then: "proportion applied - it applies when you are the buyer"
-        taxCalculatorResponse.income == 0
-        taxCalculatorResponse.costs == 123.46
-        taxCalculatorResponse.incomeMinusCosts == -123.46
-        taxCalculatorResponse.collectedVat == 0
-        taxCalculatorResponse.paidVat == 23.45
-        taxCalculatorResponse.vatToReturn == -23.45
+        with(taxCalculatorResponse) {
+            income == 0
+            costs == 111.73
+            incomeMinusCosts == -111.73
+            collectedVat == 0
+            paidVat == 11.72
+            vatToReturn == -11.72
+        }
     }
-
 
     def "All calculations are executed correctly"() {
         given:
