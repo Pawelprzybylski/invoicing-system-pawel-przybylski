@@ -12,6 +12,6 @@ logging:
 
 spring:
   profiles:
-    active: mongo
+    active: memory
   flyway:
     enabled: false
