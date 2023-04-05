@@ -5,18 +5,21 @@ import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
 
 import static pl.futurecollars.invoicing.helpers.TestHelpers.invoice
+import static pl.futurecollars.invoicing.helpers.TestHelpers.resetIds
 
 abstract class AbstractDatabaseTest extends Specification {
 
     protected List<Invoice> invoices = (1..12).collect { invoice(it) }
 
-    abstract Database getDatabaseInstance()
+    abstract Database<Invoice> getDatabaseInstance()
 
-    Database database
+    Database<Invoice> database
 
     def setup() {
         database = getDatabaseInstance()
-        database.reset()
+        database.getAll().forEach {
+            invoice -> database.delete(invoice.getId())
+        }
 
         assert database.getAll().isEmpty()
     }
@@ -77,33 +80,29 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def "updating the existing invoice returns old invoice"() {
         given:
-        def id = database.save(invoices.get(1))
+        def originalInvoice = invoices.get(0)
+        originalInvoice.id = database.save(originalInvoice)
+
+        def expectedInvoice = invoices.get(1)
+        expectedInvoice.id = originalInvoice.id
 
         when:
-        def newInvoice = invoices.get(1)
-        def updateOptional = database.update(id, newInvoice)
-        def updatedInvoice = database.getById(id).get()
-        newInvoice.setId(id)
-        newInvoice.getBuyer().setId(updatedInvoice.getBuyer().getId())
-        newInvoice.getSeller().setId(updatedInvoice.getSeller().getId())
-        newInvoice.setEntries(updatedInvoice.getEntries())
+        def result = database.update(originalInvoice.id, expectedInvoice)
 
         then:
-        updateOptional.isPresent()
-        updatedInvoice == newInvoice
+        def invoiceAfterUpdate = database.getById(originalInvoice.id).get()
+        def invoiceAfterUpdateAsString = resetIds(invoiceAfterUpdate).toString()
+        def expectedInvoiceAfterUpdateAsString = resetIds(expectedInvoice).toString()
+        invoiceAfterUpdateAsString == expectedInvoiceAfterUpdateAsString
+
+        and:
+        def invoiceBeforeUpdateAsString = resetIds(result.get()).toString()
+        def expectedInvoiceBeforeUpdateAsString = resetIds(originalInvoice).toString()
+        invoiceBeforeUpdateAsString == expectedInvoiceBeforeUpdateAsString
     }
 
     def "updating not existing invoice returns Optional.empty()"() {
         expect:
         database.update(666, invoices.get(1)) == Optional.empty()
-    }
-
-    private static resetIds(Invoice invoice) {
-        invoice.getBuyer().id = null as long
-        invoice.getSeller().id = null as long
-        invoice.entries.forEach {
-            it.id = null
-        }
-        invoice
     }
 }

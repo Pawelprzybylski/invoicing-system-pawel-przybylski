@@ -8,5 +8,5 @@ spring:
     enabled: true
 
 invoicing-system:
-  database: sql
+  database: file
 
