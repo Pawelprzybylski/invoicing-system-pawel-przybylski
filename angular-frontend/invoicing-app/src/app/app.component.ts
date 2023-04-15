@@ -10,6 +10,7 @@ import { CompanyService } from './company.service';
 
 export class AppComponent implements OnInit {
 
+
     companies: Company[] = [];
 
     newCompany: Company = new Company(0, "", "", "", 0, 0);
