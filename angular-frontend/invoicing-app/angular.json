@@ -1,18 +1,11 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "cli": {
-    "analytics": "f083243f-bb65-4b66-adc9-cf4271a50721"
-  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "invoicing-app": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:application": {
-          "strict": true
-        }
-      },
+      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -54,18 +47,20 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
                 }
               ]
             }
           }
         },
+
+
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
@@ -73,8 +68,11 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "invoicing-app:build:production"
-            }
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
           }
         },
         "extract-i18n": {
@@ -83,6 +81,7 @@
             "browserTarget": "invoicing-app:build"
           }
         },
+
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -128,5 +127,37 @@
       }
     }
   },
-  "defaultProject": "invoicing-app"
+  "defaultProject": "invoicing-app",
+  "cli": {
+    "analytics": "353b32f6-3acc-4d57-83ef-8728667ad132"
+  }
+}
+,
+"cli": {
+  "analytics": "fed5a3ae-63c4-4cdf-a780-70f98d8707ac"
+},
+"cli": {
+  "analytics": "d1e9cb07-671b-4e4f-aedd-08a0d7475bb8"
+},
+"cli": {
+  "analytics": "921a9d0c-f913-400c-91ed-2ea2bbc82403"
+}
+,
+"cli": {
+  "analytics": "e3d02ec1-2dc3-41bc-9c1b-99206c98e6ec"
+},
+"cli": {
+  "analytics": "54edf1f2-470c-4f46-8650-666a1ab315e6"
+},
+"cli": {
+  "analytics": "b8513bb0-c879-4379-b00a-2cc2979177a5"
+},
+"cli": {
+  "analytics": "8571e4cf-e1f8-435a-ba2a-1cf3bbdcf594"
+},
+"cli": {
+  "analytics": "6eb1c35a-b29f-4e08-a6d7-49beaef6708f"
+},
+"cli": {
+  "analytics": "6176d384-35ac-40f9-b32b-b7f003c97662"
 }
