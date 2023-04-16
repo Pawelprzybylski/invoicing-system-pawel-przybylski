@@ -1,7 +1,7 @@
 export class Company {
 
     public editMode: boolean = false;
-    public editedCompany: Company= new Company(22,"dsg","fds","dsf",2,1);
+    public editedCompany: Company = null;
 
     constructor(
         public id: number,
