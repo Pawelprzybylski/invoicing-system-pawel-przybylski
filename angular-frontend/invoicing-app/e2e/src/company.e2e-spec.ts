@@ -7,7 +7,6 @@ describe('Company page E2E test', () => {
 
     beforeEach(async () => {
         page = new CompanyPage();
-
         await page.navigateTo();
 
         await page.companyRows()
@@ -60,6 +59,7 @@ describe('Company page E2E test', () => {
             await page.companyRows().then(async rows => {
                 const companyRow = new CompanyRow(rows[0]);
                 await companyRow.updateCompany("456", "456 Inc.", "456 Wall Street", 5678, 567)
+                browser.wait(ExpectedConditions.presenceOf(page.anyCompanyRow()));
                 await companyRow.assertRowValues("456", "456 Inc.", "456 Wall Street", "5678", "567")
             })
         });
