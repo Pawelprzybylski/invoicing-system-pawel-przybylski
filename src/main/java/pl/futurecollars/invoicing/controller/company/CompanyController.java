@@ -3,12 +3,14 @@ package pl.futurecollars.invoicing.controller.company;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.futurecollars.invoicing.model.Company;
 import pl.futurecollars.invoicing.service.company.CompanyService;
 
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 public class CompanyController implements CompanyApi {

@@ -7,7 +7,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "startMP": "SET NODE_OPTIONS=--openssl-legacy-provider && ng serve --open",
+    "testMP": "SET NODE_OPTIONS=--openssl-legacy-provider && ng test",
+    "e2eMP": "SET NODE_OPTIONS=--openssl-legacy-provider && ng e2e"
   },
   "private": true,
   "dependencies": {
