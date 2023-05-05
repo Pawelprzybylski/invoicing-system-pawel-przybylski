@@ -15,11 +15,10 @@ spring:
     active: memory
   flyway:
     enabled: false
-
-security:
-  user:
-    name: admin
-    password: admin
+  security:
+    user:
+      name: admin
+      password: admin
 
 invoicing-system:
   allowedOrigins: http://localhost:4200
