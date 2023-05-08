@@ -33,7 +33,7 @@ public class Invoice implements WithId {
   @ApiModelProperty(value = "Invoice number (assigned by user)", required = true, example = "2023/03/15/0000001")
   private String number;
 
-  @ApiModelProperty(value = "Date invoice was created", required = true)
+  @ApiModelProperty(value = "Invoice issue date", required = true, example = "2021-07-28")
   private LocalDate date;
 
   @JoinColumn(name = "buyer")

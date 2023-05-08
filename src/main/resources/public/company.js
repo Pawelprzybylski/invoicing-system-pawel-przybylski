@@ -34,6 +34,15 @@ function handleAddCompanyFormSubmit() {
     form.on('submit', function (e) {
         e.preventDefault();
 
+        const csrfToken = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('XSRF-TOKEN='))
+                    .split('=')[1];
+
+                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                    jqXHR.setRequestHeader('X-XSRF-TOKEN', csrfToken);
+                });
+
         $.ajax({
             url: 'companies',
             type: 'post',
@@ -44,7 +53,7 @@ function handleAddCompanyFormSubmit() {
                 loadCompanies()
             },
             error: function (jqXhr, textStatus, errorThrown) {
-                alert(errorThrown)
+                 alert(jqXhr.status + " " + errorThrown)
             }
         });
     });
